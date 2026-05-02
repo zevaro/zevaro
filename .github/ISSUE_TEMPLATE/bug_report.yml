@@ -1,0 +1,88 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Zevaro.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report. Please include as much detail as possible.
+
+  - type: input
+    id: version
+    attributes:
+      label: Zevaro version
+      description: Run `zevaro --version` or check Help → About in the GUI.
+      placeholder: "e.g. v0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows 11
+        - Windows 10
+        - Linux (x86_64)
+        - Linux (arm64)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: "When I did X, I expected Y but got Z."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Step-by-step instructions to reproduce the issue.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Paste relevant lines from `zevaro.log` (found in your platform's app-data directory).
+        API keys and prompt content are automatically redacted from logs.
+      render: text
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Routing config (if relevant)
+      description: |
+        If the bug is routing-related, paste your routing rules (redact any keys).
+      render: yaml
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am running the latest version of Zevaro.
+          required: false

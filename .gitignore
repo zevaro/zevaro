@@ -1,1 +1,64 @@
+# Zevaro .gitignore
+
+# ── Go ──────────────────────────────────────────────────────────────────────
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+vendor/
+bin/
+
+# Build output (Makefile and Wails)
+build/
+cmd/zevaro/frontend/
+
+# ── Node / pnpm ──────────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+.pnpm-debug.log*
+frontend/dist/
+.npmrc
+
+# ── Wails ────────────────────────────────────────────────────────────────────
+# Wails-generated TypeScript bindings are regenerated; not committed at skeleton stage
+frontend/wailsjs/
+
+# ── Zevaro runtime data ──────────────────────────────────────────────────────
+zevaro.db
+zevaro.db-shm
+zevaro.db-wal
+zevaro.log
+config.yaml
+
+# ── OS ───────────────────────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+
+# ── Misc ─────────────────────────────────────────────────────────────────────
+*.swp
+*.swo
+*~
+.env
+.env.local
+.env.*.local
+.pnpmfile.cjs
+.pnpm-scripts-approval.json

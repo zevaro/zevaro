@@ -1,0 +1,66 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Zevaro.
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature. The best feature requests describe a problem first,
+        then the proposed solution. Please be specific.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Describe the situation or workflow that is currently painful or impossible.
+        "I want X" is less useful than "When I do Y, I can't Z because..."
+      placeholder: "When routing prompts from Cline to multiple providers, I can't..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would you like Zevaro to do differently?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: |
+        What workarounds have you tried? Why don't they work for you?
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature area
+      options:
+        - Routing / policy rules
+        - Provider support (new provider)
+        - GUI / dashboard
+        - Prompt history / search
+        - Spend tracking / budgets
+        - Caching
+        - Privacy / redaction
+        - MCP gateway
+        - Plugin system
+        - CLI / scripting
+        - Distribution / installation
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I read the architecture doc and this fits within the project scope.
+          required: false

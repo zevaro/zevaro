@@ -1,0 +1,108 @@
+/* Zevaro global styles.
+ * CSS variables define the full design-language palette from Zevaro-Architecture.md §5.
+ * Dark mode is the default; light mode is activated via [data-theme="light"] on the root element.
+ */
+
+/* --- Dark theme (default) --- */
+:root {
+  /* Backgrounds */
+  --bg-canvas: #0b0d10;
+  --bg-surface: #13171c;
+  --bg-surface-elevated: #1a1f26;
+
+  /* Borders */
+  --border-subtle: #23292f;
+  --border-strong: #323941;
+
+  /* Text */
+  --text-primary: #e6edf3;
+  --text-secondary: #a3acb8;
+  --text-muted: #6b737f;
+
+  /* Accent */
+  --accent-primary: #6c5ce7;
+  --accent-success: #2ecc71;
+  --accent-warning: #f39c12;
+  --accent-danger: #e74c3c;
+
+  /* Chart categorical palette */
+  --chart-categorical-1: #6c5ce7;
+  --chart-categorical-2: #00cec9;
+  --chart-categorical-3: #fdcb6e;
+  --chart-categorical-4: #ff7675;
+  --chart-categorical-5: #74b9ff;
+}
+
+/* --- Light theme --- */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-canvas: #ffffff;
+  --bg-surface: #f6f7f9;
+  --bg-surface-elevated: #ffffff;
+
+  /* Borders */
+  --border-subtle: #e6e8eb;
+  --border-strong: #cdd1d6;
+
+  /* Text */
+  --text-primary: #0f1115;
+  --text-secondary: #5b6470;
+  --text-muted: #8a929c;
+
+  /* Accent */
+  --accent-primary: #5b48d6;
+  --accent-success: #1e9e54;
+  --accent-warning: #c47800;
+  --accent-danger: #c0392b;
+
+  /* Chart categorical palette */
+  --chart-categorical-1: #5b48d6;
+  --chart-categorical-2: #00a39e;
+  --chart-categorical-3: #d8a23a;
+  --chart-categorical-4: #e25b5a;
+  --chart-categorical-5: #3a8fde;
+}
+
+/* --- Base styles --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Monospace elements use JetBrains Mono (bundled in a later task). */
+code,
+kbd,
+pre,
+samp {
+  font-family:
+    "JetBrains Mono",
+    ui-monospace,
+    "Cascadia Code",
+    "Source Code Pro",
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+}

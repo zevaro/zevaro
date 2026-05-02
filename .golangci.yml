@@ -1,0 +1,81 @@
+# golangci-lint configuration for Zevaro.
+# Enforces the strict ruleset from Zevaro-Architecture.md §2.
+# Target: CI-clean on the skeleton and all subsequent phases.
+
+version: "2"
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - revive
+    - gosec
+    - gocyclo
+    - gocritic
+    - misspell
+    - unparam
+    - unconvert
+    - ineffassign
+    - prealloc
+    - forbidigo
+
+linters-settings:
+  gocyclo:
+    # Cyclomatic complexity threshold. 20 permits reasonable function complexity
+    # while catching genuinely convoluted logic.
+    min-complexity: 20
+
+  gosec:
+    severity: medium
+    confidence: medium
+
+  revive:
+    rules:
+      - name: exported
+        arguments:
+          - "checkPrivateReceivers"
+          - "sayRepetitiveInsteadOfStutters"
+      - name: var-naming
+      - name: indent-error-flow
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+    disabled-checks:
+      - commentedOutCode
+      - whyNoLint
+
+  misspell:
+    locale: US
+
+  forbidigo:
+    forbid:
+      - pattern: ^fmt\.Print
+        msg: "use slog for all output; fmt.Print* is banned"
+      - pattern: ^log\.Print
+        msg: "use slog for all output; log.Print* is banned"
+      - pattern: ^log\.Fatal
+        msg: "use slog + os.Exit; log.Fatal* is banned"
+      - pattern: ^log\.Panic
+        msg: "use slog + panic; log.Panic* is banned"
+
+  unparam:
+    check-exported: false
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    # Test files are exempt from some strict rules.
+    - path: _test\.go
+      linters:
+        - gosec
+        - unparam
+        - gocritic
+    # Generated Wails bindings are exempt.
+    - path: wailsjs/
+      linters:
+        - all
