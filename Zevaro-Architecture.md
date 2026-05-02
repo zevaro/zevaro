@@ -65,6 +65,7 @@ zevaro/
 ├── NOTICE                              # Apache 2.0 NOTICE file
 ├── CONTRIBUTING.md
 ├── go.mod / go.sum                     # Daemon dependencies
+├── wails.json                          # Wails v2 project manifest (required for `wails dev` / `wails build`)
 ├── Makefile                            # build, test, lint, package, release
 ├── .editorconfig
 ├── .gitignore
@@ -155,6 +156,8 @@ zevaro/
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── eslint.config.js
 │   ├── vite.config.ts
 │   ├── index.html
 │   └── src/
@@ -188,6 +191,7 @@ zevaro/
 │   └── linux/                          # .deb / .rpm / AppImage scripts
 │
 ├── docs/                               # Source for the docs site (zevaro.ai/docs)
+│   ├── audit/                          # Audit-task artifacts (skeleton diffs, audit refreshes)
 │   ├── astro.config.mjs                # (or docusaurus equivalent)
 │   ├── src/
 │   │   ├── content/
