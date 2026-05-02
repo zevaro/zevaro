@@ -84,6 +84,7 @@ zevaro/
 │
 ├── internal/                           # Implementation; not importable by external code
 │   ├── app/                            # Top-level wiring (Wails app, IPC bridge, lifecycle)
+│   ├── constants/                      # Centralized magic values (durations, sizes, port defaults, key names)
 │   ├── server/                         # HTTP server: chi mux, middleware, graceful shutdown
 │   │   ├── server.go
 │   │   ├── middleware/                 # request_id, recovery, logging, cors
@@ -176,6 +177,8 @@ zevaro/
 │       │   └── dialogs/                # Modal primitives
 │       ├── state/                      # Zustand stores
 │       ├── lib/                        # API client, hooks, utilities
+│       ├── assets/
+│       │   └── fonts/                  # Bundled JetBrains Mono (per §5)
 │       └── styles/
 │           └── globals.css
 │
