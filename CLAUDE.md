@@ -51,7 +51,7 @@ If any of these files are missing, STOP, and ask for them before proceeding.
 
 ## Critical Execution Rules
 
-These five rules override every other guidance — including this document and the architecture document. Read them before every task.
+These six rules override every other guidance — including this document and the architecture document. Read them before every task.
 
 ### 1. The 15-Minute Test Rule
 
@@ -88,6 +88,23 @@ If you have been working on a single task for more than 90 minutes of wall time,
 | Wails GUI launch (when applicable) | `wails dev` starts, window appears | No console errors |
 
 A task that fails any applicable check is **NOT DONE**. Report the failure. Do not paper over it.
+
+### 6. Progress Checkpoints — No Long Silent Generation
+
+Rule #2 ("No Silent Spinning") covers shell commands. This rule covers generation tasks — large file writes, multi-file refactors, anything where you might otherwise spend 30+ minutes "thinking" or "planning" before producing visible output.
+
+**The hard ceiling: 5 minutes of wall time without a visible output to the conversation.** Visible output means one of:
+
+- A tool call that writes to disk (`create_file`, `str_replace`, `bash` with file output) — the user sees the file change in their editor or in `git status`.
+- A status checkpoint message in chat: a single line stating what phase you are in, what just completed, and what is next. Format: `Checkpoint: <phase> | done: <what just landed> | next: <next action>`.
+
+**5 minutes is a ceiling, not a target.** If you can checkpoint more frequently, do.
+
+**If a task naturally requires more than 5 minutes of pure thinking before any output:** the task is too large or the prompt is structured wrong. STOP. Report what you know about the structural problem. Do NOT try to push through silently.
+
+**For multi-phase tasks:** the prompt itself will declare phases (Phase A, Phase B, etc.). Each phase ends with a write to disk and a checkpoint message. Phases that exceed 5 minutes get internally subdivided with their own checkpoints. The phases in the prompt are the floor of granularity, not the ceiling.
+
+**Planning is not exempt from this rule.** "I am reading source files" or "I am mapping schemas" counts as silence if it lasts more than 5 minutes without an artifact landing on disk or a checkpoint message in chat. If you've been reading for 5 minutes, write down what you've learned in a checkpoint and start producing output.
 
 ---
 
