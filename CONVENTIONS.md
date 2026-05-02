@@ -39,6 +39,16 @@ For production we would normally require strong passwords (length, special chara
 
 ---
 
+## No CI/CD Infrastructure
+
+This project deliberately operates without CI/CD. There are no GitHub Actions workflows, no GitLab CI, no CircleCI, no automated pipelines of any kind. All verification (build, test, lint, OpenAPI lint, generated docs) runs locally via `make` targets. All releases run locally via `make release`, which invokes `goreleaser` and produces signed artifacts to a local `dist/` directory. The maintainer manually uploads release artifacts to GitHub Releases.
+
+Rationale: CI runs add cost (build minutes, debugging time when CI fails for environment reasons unrelated to the code, secret management overhead) without providing value to a single-maintainer / small-team project. Local verification is the canonical gate. The maintainer's machine is the build machine.
+
+Agents and tools must not introduce CI configuration. See AGENTS.md absolute rule "Never add CI/CD infrastructure."
+
+---
+
 ## Documentation
 
 All code must have documentation comments on every class/module and every public method/function (excluding DTOs, entities, and generated code).

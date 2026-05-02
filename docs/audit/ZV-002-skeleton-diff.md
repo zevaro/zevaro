@@ -25,7 +25,7 @@ All 102 directories declared in §3.1.
 |---|---|---|
 | `.github/` | PASS | |
 | `.github/ISSUE_TEMPLATE/` | PASS | |
-| `.github/workflows/` | PASS | |
+| `.github/workflows/` | REMOVED (ZV-CI-REMOVE) | CI removed by ZV-CI-REMOVE; directory deleted |
 | `api/` | PASS | |
 | `api/openapi/` | PASS | Contains `.gitkeep` |
 | `cmd/` | PASS | |
@@ -160,9 +160,9 @@ All 47 files declared by name in §3.1.
 | Path (per §3.1) | Status | Notes |
 |---|---|---|
 | `.github/PULL_REQUEST_TEMPLATE.md` | PASS | |
-| `.github/workflows/ci.yaml` | PASS | |
-| `.github/workflows/nightly.yaml` | PASS | Stub; full implementation ZV-057 |
-| `.github/workflows/release.yaml` | PASS | Stub; full implementation ZV-057 |
+| `.github/workflows/ci.yaml` | REMOVED (ZV-CI-REMOVE) | CI removed; no workflow files in project |
+| `.github/workflows/nightly.yaml` | REMOVED (ZV-CI-REMOVE) | CI removed |
+| `.github/workflows/release.yaml` | REMOVED (ZV-CI-REMOVE) | CI removed; ZV-057 repurposed to local release script |
 
 ### `cmd/zevaro/` files
 

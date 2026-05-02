@@ -41,7 +41,6 @@ Zevaro is **local-first**: all keys, prompts, history, routing rules, and polici
 | Build orchestration           | `Makefile` + Wails CLI; cross-compilation via `goreleaser`                                   |
 | Code signing                  | macOS: Developer ID + notarytool; Windows: EV cert via SignTool; Linux: GPG-signed packages  |
 | Auto-update                   | Custom updater using signed manifest + atomic binary replacement                             |
-| CI / CD                       | GitHub Actions                                                                               |
 | License                       | Apache 2.0                                                                                   |
 | Repo layout                   | Monorepo at `github.com/zevaro/zevaro`                                                       |
 
@@ -73,11 +72,7 @@ zevaro/
 ├── .goreleaser.yaml                    # Cross-platform release config
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── workflows/
-│       ├── ci.yaml                     # build + test + lint on push/PR
-│       ├── release.yaml                # tag-driven cross-platform signed release
-│       └── nightly.yaml                # nightly canary build
+│   └── PULL_REQUEST_TEMPLATE.md
 │
 ├── cmd/
 │   └── zevaro/
@@ -483,7 +478,7 @@ Hot-reload watches `config.yaml`; changes apply on the next request without a da
 | Windows  | `.msi` (WiX) and portable `.exe`| EV cert via SignTool                            |
 | Linux    | `.deb`, `.rpm`, `.AppImage`     | GPG-signed packages; AppImage embeds checksum   |
 
-All artifacts are reproducible via `goreleaser` driven from `.goreleaser.yaml`. Release tags trigger the GitHub Actions workflow which builds, signs, notarizes (macOS), and publishes to a GitHub Release plus the auto-update manifest.
+All artifacts are reproducible via `goreleaser` driven from `.goreleaser.yaml`. Release builds run locally on a maintainer's machine via `make release`, which invokes `goreleaser` to build, sign, and notarize for all platforms and produces all artifacts to a local `dist/` directory. The maintainer uploads `dist/` to a GitHub Release manually. There is no CI runner involved in the release process.
 
 ### 3.16 Auto-Update
 
@@ -495,6 +490,8 @@ All artifacts are reproducible via `goreleaser` driven from `.goreleaser.yaml`. 
 - On failure (signature mismatch, hash mismatch, write error): rollback to previous binary; log failure; surface to GUI.
 
 User is in control: auto-check is opt-in, channel is selectable (stable or beta), and updates can be deferred or skipped per-version.
+
+The signed manifest is generated locally as part of `make release` (ZV-057) and uploaded with the rest of the release artifacts to a GitHub Release by the maintainer. No CI runner is involved in manifest generation or distribution.
 
 ### 3.17 Offline Mode
 
@@ -528,7 +525,7 @@ Every Go package in `internal/`:
 - Has matching unit tests at the package level and integration tests in `test/integration/` where a multi-package flow is exercised.
 - Has GoDoc comments on every exported package, type, function, method, variable, and constant — except generated code, gRPC stubs, and database entity structs.
 
-`Provider` adapters in `internal/providers/cloud/` and `internal/providers/local/` additionally have integration tests gated behind a `-tags=live` build constraint that exercise real provider APIs when an environment variable like `ZEVARO_LIVE_TEST_OPENAI_KEY` is set; CI runs these only on a nightly schedule, not on every PR.
+`Provider` adapters in `internal/providers/cloud/` and `internal/providers/local/` additionally have integration tests gated behind a `-tags=live` build constraint that exercise real provider APIs when an environment variable like `ZEVARO_LIVE_TEST_OPENAI_KEY` is set. These live tests are run manually by the maintainer before each release, not on every local verification run.
 
 ---
 
@@ -587,7 +584,7 @@ All tasks are single-pass. No deferrals. Tests ship with every task. Documentati
 
 | Task | Description |
 |------|-------------|
-| **ZV-001** | **Project skeleton.** Initialize the Go module (`github.com/zevaro/zevaro`), the Wails v2 project, the directory structure per §3.1, the `.gitignore`, the `.editorconfig`, the `.golangci.yml` (strict ruleset per §2), the `Makefile` with `build / test / lint / package / release / dev` targets, the placeholder `README.md`, the `CONTRIBUTING.md`, the `.github/ISSUE_TEMPLATE/`, the `.github/PULL_REQUEST_TEMPLATE.md`, and the `.github/workflows/ci.yaml` (build + test + lint on push/PR). Confirm `LICENSE`, `NOTICE`, `CONVENTIONS.md`, and `CLAUDE.md` are already present at root from prior steps; do not modify them. Wails app launches and renders an empty "Hello Zevaro" screen. `make build`, `make test`, and `make lint` all succeed against the empty project. |
+| **ZV-001** | **Project skeleton.** Initialize the Go module (`github.com/zevaro/zevaro`), the Wails v2 project, the directory structure per §3.1, the `.gitignore`, the `.editorconfig`, the `.golangci.yml` (strict ruleset per §2), the `Makefile` with `build / test / lint / package / release / dev` targets, the placeholder `README.md`, the `CONTRIBUTING.md`, the `.github/ISSUE_TEMPLATE/`, and the `.github/PULL_REQUEST_TEMPLATE.md`. Confirm `LICENSE`, `NOTICE`, `CONVENTIONS.md`, and `CLAUDE.md` are already present at root from prior steps; do not modify them. Wails app launches and renders an empty "Hello Zevaro" screen. `make build`, `make test`, and `make lint` all succeed against the empty project. |
 | **ZV-002** | **Architecture specification finalization.** Confirm `Zevaro-Architecture.md` is current and matches the actual skeleton produced by ZV-001. Update §3.1 if directory layout drifted. This is a verification task — produce a diff report rather than a rewrite. |
 | **ZV-003** | **OpenAPI specification.** Produce `openapi.yaml` defining every endpoint surface from §3.5: OpenAI-compatible, Anthropic-compatible, and management. Every field, every enum, every request/response schema, every error shape. Validate the file with `redocly lint` (or equivalent) — zero warnings, zero errors. Generate static HTML docs into `api/openapi/docs/` via `redocly build-docs`. |
 | **ZV-004** | **Initial audit baseline.** Produce `Zevaro-Audit.md` at the repo root using the Claude Audit Template applied to the current state. Establishes the baseline format. Subsequent audit refreshes overwrite this file. |
@@ -676,19 +673,19 @@ All tasks are single-pass. No deferrals. Tests ship with every task. Documentati
 | Task | Description |
 |------|-------------|
 | **ZV-049** | **Audit refresh + GUI completion sweep.** Re-run the audit and update `Zevaro-Audit.md`. Sweep the GUI for accessibility (keyboard navigation, ARIA, contrast against §5 palette) and for visual consistency. |
-| **ZV-050** | **macOS installer with code signing.** Implement `installers/macos/`: Wails packaging into `.app`, code signing with Developer ID via env-var-supplied identity, notarization via `notarytool`, stapling, DMG generation, and the GitHub Actions workflow that produces a signed/notarized DMG on release tag. Tests cover the pipeline via CI dry-run mode. |
-| **ZV-051** | **Windows installer with code signing.** Implement `installers/windows/`: Wails packaging into `.exe`, code signing via SignTool with EV cert, MSI generation via WiX, portable EXE variant, GitHub Actions workflow. Tests cover the pipeline via CI dry-run mode. |
-| **ZV-052** | **Linux packages.** Implement `installers/linux/`: `.deb` for Debian/Ubuntu (with `postinst`/`prerm` for systemd autostart opt-in), `.rpm` for Fedora/RHEL, AppImage with embedded checksum, GPG signing of all artifacts, GitHub Actions workflow. Tests cover the pipeline via CI dry-run mode. |
+| **ZV-050** | **macOS installer with code signing.** Implement `installers/macos/`: Wails packaging into `.app`, code signing with Developer ID via env-var-supplied identity, notarization via `notarytool`, stapling, DMG generation, and the local `make release` script integration. Tests cover the pipeline in dry-run mode on the maintainer's machine. |
+| **ZV-051** | **Windows installer with code signing.** Implement `installers/windows/`: Wails packaging into `.exe`, code signing via SignTool with EV cert, MSI generation via WiX, portable EXE variant, and local `make release` script integration. Tests cover the pipeline in dry-run mode. |
+| **ZV-052** | **Linux packages.** Implement `installers/linux/`: `.deb` for Debian/Ubuntu (with `postinst`/`prerm` for systemd autostart opt-in), `.rpm` for Fedora/RHEL, AppImage with embedded checksum, GPG signing of all artifacts, and local `make release` script integration. Tests cover the pipeline in dry-run mode. |
 | **ZV-053** | **Auto-update mechanism.** Implement `internal/updater/` per §3.16: signed manifest format and validation, Ed25519 signature verification, download with hash verification, atomic binary replacement on next start, rollback on failure, GUI integration. Tests cover signature verification (positive + tampered), atomic replacement semantics, and rollback. |
 
-### Phase 10 — Quality, CI, and Integration Testing (ZV-054 through ZV-057)
+### Phase 10 — Quality and Integration Testing (ZV-054 through ZV-057)
 
 | Task | Description |
 |------|-------------|
 | **ZV-054** | **Audit refresh.** Re-run the audit and update `Zevaro-Audit.md` to reflect the distribution layer. |
-| **ZV-055** | **Cross-provider integration test suite.** Implement `test/integration/`: full request → routing → provider → response paths against mock provider servers covering every supported provider's quirks, including tool calls, streaming, error cases, and rate-limit handling. Tests run in CI on every commit. |
-| **ZV-056** | **End-to-end GUI tests.** Implement `test/e2e/` using Playwright against the built Wails app: install, onboarding, configure provider, route a prompt, view in dashboard, search history, configure budgets, multi-model comparison flow. Tests run in CI on every commit (nightly for cross-platform matrix). |
-| **ZV-057** | **Release pipeline.** Implement `.github/workflows/release.yaml`: triggered by semver tag, runs full test suite, builds for all platforms, signs and notarizes, generates checksums, creates a GitHub Release with all artifacts, updates the auto-update manifest, posts release notes. Includes a dry-run mode against a fake tag. Tests cover the workflow logic in dry-run. |
+| **ZV-055** | **Cross-provider integration test suite.** Implement `test/integration/`: full request → routing → provider → response paths against mock provider servers covering every supported provider's quirks, including tool calls, streaming, error cases, and rate-limit handling. Tests run locally via `make test`. |
+| **ZV-056** | **End-to-end GUI tests.** Implement `test/e2e/` using Playwright against the built Wails app: install, onboarding, configure provider, route a prompt, view in dashboard, search history, configure budgets, multi-model comparison flow. Tests run locally via `make test`. |
+| **ZV-057** | **Local release script.** Implement `make release` and supporting scripts in `scripts/release/`: takes a semver tag as input, runs the full local verification ladder (`make build / test / lint`), invokes `goreleaser` locally to build for all platforms, signs and notarizes (macOS) and signs (Windows) using locally-configured signing identities, generates checksums, generates the auto-update manifest, and produces all release artifacts to a local `dist/` directory. The maintainer manually uploads `dist/` to a GitHub Release after running. No GitHub Actions, no CI runners, no remote build infrastructure — releases are reproducible locally on a maintainer's machine. Tests cover the script logic in dry-run mode and verify the output artifact set against an expected manifest. |
 
 ### Phase 11 — Documentation and Launch (ZV-058 through ZV-063)
 

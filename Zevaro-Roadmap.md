@@ -32,7 +32,7 @@ Audit-refresh tasks at the end of each phase regenerate `Zevaro-Audit.md` from t
 - **HTTP framework:** `chi` v5 on stdlib `net/http`
 - **API surface:** OpenAI-compatible and Anthropic-compatible (drop-in) plus a `/api/v1/...` management surface
 - **Testing:** stdlib `testing` + `testify` + `httptest` + in-memory SQLite + `go-vcr` cassettes for provider replay
-- **Build / CI:** Makefile + GitHub Actions; `goreleaser` for cross-platform releases
+- **Build:** Makefile; `goreleaser` for cross-platform local releases (no CI)
 - **License:** Apache 2.0
 - **Repo layout:** Monorepo at `github.com/zevaro/zevaro`
 
@@ -44,7 +44,7 @@ Full detail in `Zevaro-Architecture.md` §2.
 
 | Task | Description |
 |------|-------------|
-| **ZV-001** | Project skeleton (Go module, Wails project, directory tree, Makefile, GitHub Actions CI) |
+| **ZV-001** | Project skeleton (Go module, Wails project, directory tree, Makefile) |
 | **ZV-002** | Architecture spec verification (diff actual skeleton against §3.1) |
 | **ZV-003** | OpenAPI specification — every endpoint, field, enum, error shape |
 | **ZV-004** | Initial audit baseline (`Zevaro-Audit.md`) |
@@ -138,14 +138,14 @@ Full detail in `Zevaro-Architecture.md` §2.
 | **ZV-052** | Linux packages (`.deb`, `.rpm`, AppImage) |
 | **ZV-053** | Auto-update mechanism (signed manifest, atomic replacement, rollback) |
 
-## Phase 10 — Quality, CI, and Integration Testing
+## Phase 10 — Quality and Integration Testing
 
 | Task | Description |
 |------|-------------|
 | **ZV-054** | Audit refresh |
 | **ZV-055** | Cross-provider integration test suite |
 | **ZV-056** | End-to-end GUI tests (Playwright) |
-| **ZV-057** | Release pipeline |
+| **ZV-057** | Local release script (`make release` + `scripts/release/`) |
 
 ## Phase 11 — Documentation and Launch
 

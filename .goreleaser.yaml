@@ -1,6 +1,6 @@
 # GoReleaser configuration for Zevaro.
 # Produces signed cross-platform binaries. Code signing is added in ZV-050/051/052.
-# Triggered by a semver tag via .github/workflows/release.yaml (implemented in ZV-057).
+# Invoked locally by the maintainer via `make release` (implemented in ZV-057).
 version: 2
 
 project_name: zevaro

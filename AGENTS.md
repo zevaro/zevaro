@@ -47,6 +47,8 @@ If any of these files are missing, STOP, and ask for them before proceeding.
 
 9. **Single-pass completeness.** Every task — feature, fix, remediation — completes in one pass. No `// TODO`, no stubs, no "needs follow-up." If achieving completeness requires more files than the prompt mentions, ASK before proceeding.
 
+10. **Never add CI/CD infrastructure.** This project deliberately operates without CI. Do not create or modify GitHub Actions workflows (`.github/workflows/*`), GitLab CI configs (`.gitlab-ci.yml`), CircleCI configs (`.circleci/`), Travis (`.travis.yml`), Jenkins, Drone, Buildkite, or any other automated pipeline configuration. Do not add CI badges to README. Do not write tasks that depend on CI runners. Verification runs locally via `make` targets. Releases run locally via `make release`. If you believe a task requires CI to complete, STOP and report — that's an architect-level decision and the answer is almost certainly "no, do it locally instead."
+
 ---
 
 ## Critical Execution Rules

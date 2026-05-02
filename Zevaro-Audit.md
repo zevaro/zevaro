@@ -185,9 +185,6 @@ Release:  goreleaser release  (via .goreleaser.yaml — implemented in ZV-057)
 | `frontend/eslint.config.js` | ESLint — TypeScript parser, react + react-hooks plugins, no-console: warn, @typescript-eslint/no-unused-vars: error. |
 | `.editorconfig` | Editor conventions — lf line endings, UTF-8, Go uses tabs, TS/JS/JSON/YAML use 2-space indent. |
 | `.gitignore` | Standard — ignores build/, vendor/, node_modules/, coverage.out, frontend/dist/, zevaro.db, config.yaml, pnpm artifacts in frontend/. |
-| `.github/workflows/ci.yaml` | CI pipeline — ubuntu-latest, runs on push/PR to main: checkout → Go 1.22 → Node 20 → pnpm → lint → test → build. |
-| `.github/workflows/nightly.yaml` | Nightly canary build (implemented in ZV-001). |
-| `.github/workflows/release.yaml` | Tag-driven release pipeline (skeleton — implemented fully in ZV-057). |
 
 **Runtime config (`config.yaml`):** Not yet present at runtime. The config system (ZV-006) will read from `~/Library/Application Support/Zevaro/config.yaml` (macOS) / `~/.local/share/zevaro/config.yaml` (Linux) / `%LOCALAPPDATA%\Zevaro\config.yaml` (Windows). No config.yaml file is committed to the repo (gitignored).
 
@@ -208,10 +205,7 @@ Cloud Services:  None
 
 ### CI/CD
 
-Three GitHub Actions workflows at `.github/workflows/`:
-- `ci.yaml` — fully implemented; runs build/test/lint on every push and PR to main.
-- `nightly.yaml` — skeleton; fully implemented in ZV-001.
-- `release.yaml` — skeleton; fully implemented in ZV-057.
+No CI/CD pipelines. This project deliberately operates without CI. All verification runs locally via `make` targets. Releases run locally via `make release` (ZV-057). See AGENTS.md Absolute Rule 10 and CONVENTIONS.md "No CI/CD Infrastructure".
 
 ## 5. Startup & Runtime Behavior
 
