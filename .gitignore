@@ -22,6 +22,10 @@ frontend/node_modules/
 .pnpm-debug.log*
 frontend/dist/
 .npmrc
+# pnpm config artifacts generated inside frontend/ during install (ZV-003 fix)
+frontend/.npmrc
+frontend/.pnpmfile.cjs
+frontend/.pnpm-scripts-approval.json
 
 # ── Wails ────────────────────────────────────────────────────────────────────
 # Wails-generated TypeScript bindings are regenerated; not committed at skeleton stage

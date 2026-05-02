@@ -44,6 +44,8 @@ make dev
 
 The compiled binary lands at `build/bin/zevaro`.
 
+**API reference:** The full OpenAPI 3.1 spec is at [`openapi.yaml`](openapi.yaml). Browsable HTML documentation is at [`api/openapi/docs/index.html`](api/openapi/docs/index.html) — open it in any browser, or run `make docs` to regenerate it.
+
 ---
 
 ## License

@@ -13,7 +13,7 @@ FRONTEND   := ./frontend
 GOOS   := $(shell go env GOOS)
 GOARCH := $(shell go env GOARCH)
 
-.PHONY: build test lint package release dev clean
+.PHONY: build test lint lint-openapi docs package release dev clean
 
 ## build: Compile the frontend and produce the Zevaro binary for the current platform.
 build: frontend-build
@@ -42,8 +42,8 @@ test-frontend:
 	@echo "==> Running frontend tests"
 	@cd $(FRONTEND) && pnpm test --run
 
-## lint: Run golangci-lint and frontend ESLint + tsc.
-lint: lint-go lint-frontend
+## lint: Run golangci-lint, frontend ESLint + tsc, and OpenAPI spec lint.
+lint: lint-go lint-frontend lint-openapi
 
 ## lint-go: Run golangci-lint on all Go packages.
 lint-go:
@@ -54,6 +54,17 @@ lint-go:
 lint-frontend:
 	@echo "==> Running frontend lint"
 	@cd $(FRONTEND) && pnpm run lint
+
+## lint-openapi: Validate the OpenAPI spec with Redocly CLI (zero errors, zero warnings).
+lint-openapi:
+	@echo "==> Linting OpenAPI spec"
+	npx -y @redocly/cli@latest lint openapi.yaml --config .redocly.yaml
+
+## docs: Generate browsable HTML documentation from openapi.yaml into api/openapi/docs/.
+docs:
+	@echo "==> Generating OpenAPI docs"
+	@mkdir -p api/openapi/docs
+	npx -y @redocly/cli@latest build-docs openapi.yaml -o api/openapi/docs/index.html
 
 ## package: Placeholder — packaging implemented in ZV-050/051/052.
 package:

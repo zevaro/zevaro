@@ -1,0 +1,12 @@
+# Redocly configuration for Zevaro OpenAPI spec linting.
+# See: https://redocly.com/docs/cli/configuration/
+apis:
+  main:
+    root: openapi.yaml
+
+rules:
+  # Schemas defined in components/ are referenced from paths/.
+  # During Phase A the paths object is intentionally empty (populated in Phases B-D),
+  # so the no-unused-components warning is a false positive at scaffold time.
+  # This rule is re-enabled once all paths are in place and referenced schemas are verified.
+  no-unused-components: off
